@@ -2,25 +2,27 @@
 
 ## Objectif
 
-Préparer le projet : infrastructure, architecture, design system de base, connectivité frontend ↔ backend ↔ MongoDB, sans fonctionnalité métier.
+Préparer le projet : infrastructure, architecture, montée en charge et connectivité backend ↔ MongoDB, sans fonctionnalité métier.
+
+## Organisation des repos
+
+- Repository indépendant par sous-projet (décision utilisateur) : `backend` et `frontend` sont deux repos Git séparés.
 
 ## Fonctionnalités réalisées
 
-- Repository initialisé (Git, branche `main`).
-- `frontend/` : Vite + React 19 + TypeScript + Tailwind CSS v4.
-- `backend/` : Node.js + TypeScript + Express + Mongoose.
+- Repository backend initialisé (Git, branche `main`).
+- Backend : Node.js + TypeScript + Express + Mongoose.
 - Endpoint `GET /api/health` opérationnel.
 - Connexion MongoDB Atlas validée (base `Nearpro`).
-- Design tokens (`src/styles/tokens.css`) et mapping Tailwind (`@theme inline`).
-- Base du design system (`components/ui/`) : Button, Input, Textarea, Select, Badge, Card, Spinner, Skeleton.
-- Configuration ESLint + Prettier (frontend et backend).
-- `.env.example`, `.gitignore`, `README.md`, `docs/` (architecture, design-system, roadmap).
+- **250+ utilisateurs simultanés** : cluster multi-cœurs (`CLUSTER_ENABLED=true` → 4 workers vérifiés), compression gzip, rate limiting par IP, pool MongoDB configurable, garde anti fork-storm.
+- Sécurité : Helmet, CORS, sanitize NoSQL, errorHandler standard (Zod → 400).
+- Zod pour les variables d'environnement.
+- Configuration ESLint + Prettier, `.env.example`, `.gitattributes`, `.gitignore`, README.
+- Documentation : `docs/architecture.md`, `docs/scale.md`, `docs/roadmap.md`, `docs/sprints/`.
 
 ## Fichiers principaux
 
-- `backend/src/config/{env,database}.ts`, `backend/src/middlewares/{errorHandler,sanitizeNoSql}.ts`, `backend/src/modules/health/{controller,routes}.ts`, `backend/src/{app,server}.ts`, `backend/tsconfig.json`.
-- `frontend/src/styles/tokens.css`, `frontend/src/index.css`, `frontend/src/routes/index.tsx`, `frontend/src/main.tsx`, `frontend/src/layouts/PublicLayout/index.tsx`, `frontend/src/pages/HomePage.tsx`, `frontend/src/components/ui/*`.
-- Racine : `.gitignore`, `README.md`, `docs/*`.
+- `backend/src/config/{env,database}.ts`, `backend/src/middlewares/{errorHandler,sanitizeNoSql,rateLimiter}.ts`, `backend/src/modules/health/{controller,routes}.ts`, `backend/src/{app,server}.ts`, `backend/tsconfig.json`.
 
 ## Base de données
 
@@ -33,9 +35,7 @@ Préparer le projet : infrastructure, architecture, design system de base, conne
 
 ## Design system / responsive
 
-- Tokens complétés et mappés Tailwind : palette, ombres, rayons, espacements, typographie.
-- Composants de base développés dans `components/ui/` (aucun style ad hoc).
-- Page d'accueil Sprint 0 conçue mobile-first et vérifiée en build (320px → 2560px à repasser en Sprint 7).
+- Hors périmètre backend (voir repo `frontend`).
 
 ## Tests
 
