@@ -7,6 +7,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 import { apiLimiter } from './middlewares/rateLimiter';
 import { sanitizeNoSql } from './middlewares/sanitizeNoSql';
 import { healthRouter } from './modules/health/routes';
+import { authRouter } from './modules/auth/routes';
 
 export function createApp(): Express {
   const app = express();
@@ -25,6 +26,7 @@ export function createApp(): Express {
 
   // Routes de l'API
   app.use('/api/health', healthRouter);
+  app.use('/api/auth', authRouter);
 
   // 404 + gestion d'erreurs
   app.use(notFoundHandler);

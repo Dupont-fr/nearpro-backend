@@ -9,6 +9,8 @@ const envSchema = z.object({
     .min(1, 'MONGODB_URI est requise (voir backend/.env.example)'),
   JWT_SECRET: z.string().min(1).default('dev-jwt-secret-change-me'),
   JWT_REFRESH_SECRET: z.string().min(1).default('dev-jwt-refresh-secret-change-me'),
+  JWT_ACCESS_EXPIRES_SECONDS: z.coerce.number().int().positive().default(15 * 60),
+  JWT_REFRESH_EXPIRES_SECONDS: z.coerce.number().int().positive().default(7 * 24 * 60 * 60),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
 
   // Montée en charge (voir docs/scale.md)

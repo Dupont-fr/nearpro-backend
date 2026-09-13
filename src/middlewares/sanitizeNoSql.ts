@@ -1,26 +1,21 @@
 import type { NextFunction, Request, Response } from 'express';
 
 /**
- * Protection NoSQL : interdit les opérateurs MongoDB ($) dans body/query/params.
- * Voir section 27 du cahier des charges (protection contre les injections).
+ * Protection NoSQL : interdit les opérateurs MongoDB (clés `$...`) dans
+ * body/query/params. Seules les CLÉS commençant par `$` sont bloquées :
+ * un caractère `$` à l'intérieur d'une valeur (ex. mot de passe « a$b »,
+ * prix « 5 $ ») est une donnée légitime et n'est pas inspecté.
  */
-function containsNoSqlOperators(value: unknown): boolean {
-  if (value === null || value === undefined) return false;
-  if (typeof value === 'string') return value.includes('$'); // escape simple et robuste
-  return false;
-}
-
 function scan(node: unknown): boolean {
   if (Array.isArray(node)) {
     return node.some(scan);
   }
-  if (typeof node === 'object') {
-    return Object.keys(node as Record<string, unknown>).some((key) => {
-      if (key.startsWith('$')) return true;
-      return scan((node as Record<string, unknown>)[key]);
-    });
+  if (typeof node === 'object' && node !== null) {
+    return Object.keys(node as Record<string, unknown>).some(
+      (key) => key.startsWith('$') || scan((node as Record<string, unknown>)[key]),
+    );
   }
-  return containsNoSqlOperators(node);
+  return false;
 }
 
 export function sanitizeNoSql(req: Request, _res: Response, next: NextFunction): void {
