@@ -8,7 +8,17 @@ Backend de la plateforme **NearPro** — découverte de professionnels locaux (C
 - Express.js (REST API)
 - MongoDB + Mongoose (index géospatial `2dsphere`)
 - Zod (validation API + env)
-- JWT (Sprint 1), rate limiting, Helmet, anti-injection NoSQL
+- JWT (Sprint 1) avec refresh token, rate limiting, Helmet, anti-injection NoSQL
+
+## API (Sprint 1 — Authentification)
+
+| Méthode | Route | Description |
+| --- | --- | --- |
+| POST | `/api/auth/register` | Créer un compte (CUSTOMER/PROFESSIONAL) |
+| POST | `/api/auth/login` | Connexion (cookies HttpOnly posés) |
+| POST | `/api/auth/logout` | Déconnexion + révocation refresh |
+| POST | `/api/auth/refresh` | Rotation de session |
+| GET | `/api/auth/me` | Profil courant (protégé) |
 
 ## Architecture modulaire
 
@@ -39,9 +49,13 @@ Vérification : `GET http://localhost:5000/api/health`
 - `npm run dev` — serveur de dev avec rechargement
 - `npm run build` — compilation TypeScript
 - `npm start` — serveur de production (utilise les workers cluster)
+- `npm test` — tests Vitest + Supertest (MongoDB Atlas, base `Nearpro_test`)
 - `npm run typecheck` — vérification TypeScript
 - `npm run lint` — ESLint
 - `npm run format` — Prettier
+
+> Tests : nécessite `backend/.env` (MONGODB_URI). La base de test `Nearpro_test` est
+> créée puis vidée automatiquement ; aucune donnée de développement n'est touchée.
 
 ## Montée en charge
 
