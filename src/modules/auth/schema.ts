@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+const CAMEROON_MOBILE_REGEX = /^6[5-9]\d{7}$/;
+
+// Accepte "+237 690 00 00 00" ou "6 90 00 00 00" ; refuse 6 11 11 11 11, 7 00 00 00 00, 6 22 22 99 99…
+function isCameroonMobile(value: string): boolean {
+  const digits = value.replace(/[\s+]/g, '');
+  const local = digits.startsWith('237') ? digits.slice(3) : digits;
+  return CAMEROON_MOBILE_REGEX.test(local);
+}
+
 export const registerSchema = z.object({
   firstName: z
     .string()
@@ -14,7 +23,7 @@ export const registerSchema = z.object({
   email: z.string().trim().toLowerCase().email("L'adresse email est invalide").max(254),
   phone: z
     .string()
-    .regex(/^\+?[0-9 ]{9,20}$/, 'Numéro de téléphone invalide')
+    .refine(isCameroonMobile, 'Numéro de mobile camerounais invalide (ex : 6 90 00 00 00)')
     .optional()
     .or(z.literal('').transform(() => undefined)),
   password: z
