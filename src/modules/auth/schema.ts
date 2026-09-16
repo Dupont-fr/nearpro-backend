@@ -17,7 +17,33 @@ export const registerSchema = z.object({
     .regex(/^\+?[0-9 ]{9,20}$/, 'Numéro de téléphone invalide')
     .optional()
     .or(z.literal('').transform(() => undefined)),
-  password: z.string().min(8, 'Le mot de passe doit contenir au moins 8 caractères').max(72),
+  password: z
+    .string()
+    .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+    .max(72, 'Le mot de passe est trop long')
+    .superRefine((value, ctx) => {
+      if (!/[A-Z]/.test(value)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['password'],
+          message: 'Le mot de passe doit contenir une majuscule',
+        });
+      }
+      if (!/[a-z]/.test(value)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['password'],
+          message: 'Le mot de passe doit contenir une minuscule',
+        });
+      }
+      if (!(/\d/.test(value) || /[^A-Za-z0-9]/.test(value))) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['password'],
+          message: 'Le mot de passe doit contenir un chiffre ou un caractère spécial',
+        });
+      }
+    }),
   role: z.enum(['CUSTOMER', 'PROFESSIONAL']).default('CUSTOMER'),
 });
 
