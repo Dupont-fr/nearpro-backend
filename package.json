@@ -10,6 +10,7 @@
     "start": "node dist/server.js",
     "test": "vitest run",
     "test:watch": "vitest",
+    "seed": "tsx src/seed/categories.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "format": "prettier --write src"

@@ -10,7 +10,7 @@ Backend de la plateforme **NearPro** — découverte de professionnels locaux (C
 - Zod (validation API + env)
 - JWT (Sprint 1) avec refresh token, rate limiting, Helmet, anti-injection NoSQL
 
-## API (Sprint 1 — Authentification)
+## API — Authentification (Sprint 1)
 
 | Méthode | Route | Description |
 | --- | --- | --- |
@@ -19,6 +19,19 @@ Backend de la plateforme **NearPro** — découverte de professionnels locaux (C
 | POST | `/api/auth/logout` | Déconnexion + révocation refresh |
 | POST | `/api/auth/refresh` | Rotation de session |
 | GET | `/api/auth/me` | Profil courant (protégé) |
+
+## API — Catégories (Sprint 2)
+
+| Méthode | Route | Description |
+| --- | --- | --- |
+| GET | `/api/categories` | Arbre des catégories actives (public) |
+| GET | `/api/categories/:slug` | Détail d'une catégorie + sous-catégories (public) |
+| POST | `/api/categories` | Créer une catégorie (ADMIN) |
+| PATCH | `/api/categories/:id` | Modifier une catégorie (ADMIN) |
+| DELETE | `/api/categories/:id` | Supprimer une catégorie sans enfants (ADMIN) |
+
+Sous-catégories via `parentId` (deux niveaux max, boucles interdites). Préchargement :
+`npm run seed` (compte ADMIN + 8 catégories de référence, prompt.md §30).
 
 ## Architecture modulaire
 
@@ -50,6 +63,7 @@ Vérification : `GET http://localhost:5000/api/health`
 - `npm run build` — compilation TypeScript
 - `npm start` — serveur de production (utilise les workers cluster)
 - `npm test` — tests Vitest + Supertest (MongoDB Atlas, base `Nearpro_test`)
+- `npm run seed` — précharge l'admin + les catégories de référence (prompt.md §30)
 - `npm run typecheck` — vérification TypeScript
 - `npm run lint` — ESLint
 - `npm run format` — Prettier

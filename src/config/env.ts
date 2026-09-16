@@ -13,6 +13,10 @@ const envSchema = z.object({
   JWT_REFRESH_EXPIRES_SECONDS: z.coerce.number().int().positive().default(7 * 24 * 60 * 60),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
 
+  // Compte administrateur créé par `npm run seed`
+  ADMIN_EMAIL: z.string().trim().toLowerCase().email().default('admin@nearpro.cm'),
+  ADMIN_PASSWORD: z.string().min(8).default('AdminNearPro!2026'),
+
   // Montée en charge (voir docs/scale.md)
   MONGODB_POOL_SIZE: z.coerce.number().int().positive().default(50),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(15 * 60 * 1000),
